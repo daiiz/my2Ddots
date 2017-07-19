@@ -28,6 +28,16 @@ var bindEvents = () => {
     var groupNumber = $select.val();
     plotDot(x, y, groupNumber);
   });
+
+  // Ctrl+z, Cmd+z
+  // remove latest dot
+  $(window).on('keydown', e => {
+    var Z = 90;
+    if ((e.keyCode === Z) && (e.ctrlKey || e.metaKey)) {
+      var dots = $('div.point');
+      $(dots[dots.length - 1]).remove();
+    }
+  });
 };
 
 var initTools = () => {
@@ -43,12 +53,15 @@ var initTools = () => {
 var plotDot = (x, y, groupNumber) => {
   var $canvas = $('div#canvas');
   var $point = $(`<div class="point"></div>`);
+  var posId = `pos_${x}_${y}`;
+  if ($(`div.point[data-pos=${posId}]`).length > 0) return;
   $point.css({
     'top': y,
     'left': x,
     'background-color': groupList[groupNumber]
   });
   $point.attr('data-group', groupNumber);
+  $point.attr('data-pos', posId);
   $canvas.append($point);
 };
 
