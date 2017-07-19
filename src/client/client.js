@@ -2,6 +2,7 @@ const $ = require('jquery');
 const groupList = [
   "red", "blue", "green", "yellow", "cyan", "purple", "gray"
 ];
+const appName = 'daiiz-points';
 
 var bindEvents = () => {
   var $canvas = $('div#canvas');
@@ -57,23 +58,29 @@ var bindEvents = () => {
       var maxNum = -1000000;
       var minNum = +1000000;
       var points = [];
+      var myToolData = false;
       records.forEach(record => {
-        if (record.indexOf(separator) === -1) separator = '\t';
-        var [x, y, label] = record.split(separator);
-        if (!x || !y) return;
-        if (!label) label = 0;
-        // negative label -1 -> 0
-        label = Math.max(0, +label);
-        x = +x;
-        y = +y;
-        if (maxNum < x) maxNum = x;
-        if (maxNum < y) maxNum = y;
-        if (minNum > x) minNum = x;
-        if (minNum > y) minNum = y;
-        points.push([x, y, label]);
+        if (record.startsWith(`# ${appName}`)) {
+          myToolData = true;
+        } else {
+          if (record.indexOf(separator) === -1) separator = '\t';
+          var [x, y, label] = record.split(separator);
+          if (!x || !y) return;
+          if (!label) label = 0;
+          // negative label -1 -> 0
+          label = Math.max(0, +label);
+          x = +x;
+          y = +y;
+          if (maxNum < x) maxNum = x;
+          if (maxNum < y) maxNum = y;
+          if (minNum > x) minNum = x;
+          if (minNum > y) minNum = y;
+          points.push([x, y, label]);
+        }  
       });
       
       var range = Math.floor(Math.max(Math.abs(maxNum), Math.abs(minNum))) + 1;
+      if (myToolData) range = 250;
       $range.val(range);
       points = translation(points, range, true, '+');
 
@@ -90,15 +97,19 @@ var bindEvents = () => {
     var points = getAllDots();
     var range = +$range.val();
     points = translation(points, range, true, '-');
+    var txts = [`# ${appName}`];
+    points.forEach(point => { 
+      txts.push(point);
+    });
 
-    var blob = new Blob([points.join('\r\n')], { type: "text/csv" });
+    var blob = new Blob([txts.join('\r\n')], { type: "text/csv" });
     var url = window.URL.createObjectURL(blob);
     $out.attr('href', url);
     console.log('ok');
   });
 };
 
-var translation = (points=[], range=10, scale=true, direction='+') => {
+var translation = (points = [], range = 10, scale = true, direction = '+') => {
   var $canvas = $('div#canvas');
   var w = $canvas[0].offsetWidth;
   var scaled = [];
@@ -111,13 +122,13 @@ var translation = (points=[], range=10, scale=true, direction='+') => {
     var y = point[1];
     if (direction === '+') {
       // import
-      s.push((x + range) * c - 4);
-      s.push((range - y) * c - 4);
+      s.push((x + range) * c);
+      s.push((range - y) * c);
     } else if (direction === '-') {
       // export
       var ci = (2 * range) / w;
-      x = (x + 4 - (w / 2)) * ci;
-      y = (w / 2 - (y + 4)) * ci;
+      x = (x + 4 - (w / 2));// * ci;
+      y = (w / 2 - (y + 4));// * ci;
       s.push(x);
       s.push(y);
     }
@@ -144,8 +155,8 @@ var plotDot = (x, y, groupNumber) => {
   var posId = `pos_${x}_${y}`.replace(/\./gi, '-');
   if ($(`div.point[data-pos=${posId}]`).length > 0) return;
   $point.css({
-    'top': y,
-    'left': x,
+    'top': y - 4,
+    'left': x - 4,
     'background-color': groupList[groupNumber]
   });
   $point.attr('data-group', groupNumber);

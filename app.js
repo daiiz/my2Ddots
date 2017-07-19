@@ -19,3 +19,7 @@ http.listen(PORT, () => {
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+
+app.get('/ads', (req, res) => {
+  res.sendFile(__dirname + '/index.ads.html');
+});
