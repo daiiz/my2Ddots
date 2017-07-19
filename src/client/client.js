@@ -8,6 +8,7 @@ var bindEvents = () => {
   var $select = $('#class-list');
   var $loadBtn = $('#load-csv');
   var $range = $('#range');
+  var $out = $('#out');
   
   // remove dot
   $canvas.on('click', '.point', e => {
@@ -83,11 +84,23 @@ var bindEvents = () => {
     });
     reader.readAsText(file);
   });
+
+  // Create CSV file
+  $out.on('mouseenter', e => {
+    var points = getAllDots();
+    var range = +$range.val();
+    points = translation(points, range, true, '-');
+
+    var blob = new Blob([points.join('\r\n')], { type: "text/csv" });
+    var url = window.URL.createObjectURL(blob);
+    $out.attr('href', url);
+    console.log('ok');
+  });
 };
 
 var translation = (points=[], range=10, scale=true, direction='+') => {
   var $canvas = $('div#canvas');
-  var w = Math.floor($canvas[0].offsetWidth)// / 2);
+  var w = $canvas[0].offsetWidth;
   var scaled = [];
   for (var i = 0; i < points.length; i++) {
     var point = points[i];
@@ -96,22 +109,17 @@ var translation = (points=[], range=10, scale=true, direction='+') => {
     if (!scale) scale = 1.0;
     var x = point[0];
     var y = point[1];
-    console.log(w, c);
     if (direction === '+') {
       // import
       s.push((x + range) * c - 4);
-      //s.push((x * c) + w/2);
       s.push((range - y) * c - 4);
-      // s.push(x * c + w/2);
-      // if (y <= 0) {
-      //   s.push(Math.abs(y) * c + w);
-      // } else {
-      //   s.push(w - y * c);
-      // }
-    } else {
+    } else if (direction === '-') {
       // export
-      s.push(point[0] * c - w);
-      s.push(point[1] * c - w);
+      var ci = (2 * range) / w;
+      x = (x + 4 - (w / 2)) * ci;
+      y = (w / 2 - (y + 4)) * ci;
+      s.push(x);
+      s.push(y);
     }
     
     s.push(point[2]); // label
@@ -143,6 +151,20 @@ var plotDot = (x, y, groupNumber) => {
   $point.attr('data-group', groupNumber);
   $point.attr('data-pos', posId);
   $canvas.append($point);
+};
+
+var getAllDots = () => {
+  var dots = $('.point');
+  var points = [];
+  for (var i = 0; i < dots.length; i++) {
+    var dot = dots[i];
+    var $dot = $(dot);
+    var group = +$dot.attr('data-group');
+    var x = dot.offsetLeft;
+    var y = dot.offsetTop;
+    points.push([x, y, group]);
+  }
+  return points;
 };
 
 var clearCanvas = () => {
