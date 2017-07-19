@@ -1,5 +1,6 @@
 dist/*.js
 static/*.js
+*.ads.html
 ### https://raw.github.com/github/gitignore/7e04a3f05c5b913b5767ca88fc61734494ca97e2/Node.gitignore
 
 # Logs
