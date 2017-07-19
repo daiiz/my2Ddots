@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    background-color: #eee;
+    padding: 20px;
+}
+
+#canvas {
+    margin: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    width: 500px;
+    height: 500px;
+    position: relative;
+    box-sizing: border-box;
+    cursor: crosshair;
+}
+
+.canvas-l, .canvas-t {
+    top: 0;
+    left: 0;
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.canvas-l {
+    width: 50%;
+    height: 100%;
+    border-right: 1px dotted #ccc;
+}
+
+.canvas-t {
+    height: 50%;
+    width: 100%;
+    border-bottom: 1px dotted #ccc;
+}
+
+#tools {
+    padding: 6px;
+}
+
+.point {
+    width: 7px;
+    height: 7px;
+    box-sizing: border-box;
+    border: 1px solid #555;
+    border-radius: 50%;
+    position: absolute;
+    cursor: pointer;
+}
