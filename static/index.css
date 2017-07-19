@@ -4,6 +4,10 @@ body {
     padding: 20px;
 }
 
+.h {
+    display: none;
+}
+
 .msg {
     font-size: 9pt;
 }
