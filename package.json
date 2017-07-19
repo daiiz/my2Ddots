@@ -1,0 +1,21 @@
+{
+  "name": "myDataPoint",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "daiiz <da.iz.mg@gmail.com>",
+  "scripts": {
+    "test": "ava",
+    "start": "node-dev app.js",
+    "watch": "watchify src/client/client.js -o static/client.js -v"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {
+    "ava": "^0.20.0",
+    "watchify": "^3.9.0"
+  },
+  "license": "MIT"
+}
