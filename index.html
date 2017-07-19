@@ -8,13 +8,22 @@
   <body>
     <h2>MyDataPoint</h2>
     <div id="tools">
-      Class: 
+      Load dots:
+      <input type="file" id="load-csv">
+      <br>
+      Range:
+      <input type="number" id="range" min=10 value=100>
+      <br>
+      Class Label: 
       <select id="class-list">
       </select>
     </div>
     <div id="canvas">
       <div class="canvas-t"></div>
       <div class="canvas-l"></div>
+    </div>
+    <div class="msg">
+      <a href="#" id="out">Download CSV</a>
     </div>
     <script src="/static/client.js"></script>
   </body>

@@ -4,6 +4,10 @@ body {
     padding: 20px;
 }
 
+.msg {
+    font-size: 9pt;
+}
+
 #canvas {
     margin: 10px;
     background-color: #fff;
